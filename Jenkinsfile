@@ -1,36 +1,37 @@
 pipeline{
-    agent {dockerfile true}
+    agent {image "node:16.18-alpine"}
+    environment {
+        DOCKERHUB_USER = "xxavarlonxx"
+        APP = "node_hello_world"
+        DOCKER_IMAGE = ""
+    }
     stages{
-        stage('Node version'){
+        stage('Checkout Repository'){
             steps{
-                script {
-                    sh 'node --version'
+                script{
+                    checkout scm
                 }
             }
         }
-        stage('Build image'){
+        stage('Build Docker Image'){
             steps{
                 script {
-                    sh echo 'Build Image'
+                    echo "Build Image ${DOCKERHUB_USER}/${APP}"
+                    DOCKER_IMAGE = docker.build("${DOCKERHUB_USER}/${APP}")
                 }
             }
         }
 
-        stage('Push Image to Registry'){
+        stage('Push Image to Dockerhub'){
             steps{
                 script{
-                   sh echo "Push"
+                    echo "Push to dockerhub with tags ${BUILD_NUMBER} and latest"
+                    docker.withRegistry('https://hub.docker.com/', 'dockerhub'){
+                        DOCKER_IMAGE.push(${BUILD_NUMBER})
+                        DOCKER_IMAGE.push('latest')
+                    }
                 }
             }
-        }
-
-        stage('Publish on remote server'){
-            steps{
-                script{
-                    sh "Deploy"
-                }
-            }
-            
         }
     }
 }
