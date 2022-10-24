@@ -3,7 +3,7 @@ pipeline{
     environment {
         DOCKERHUB_USER = "xxavarlonxx"
         APP = "node_hello_world"
-        DOCKER_IMAGE = ""
+        dockerImage = ""
     }
     stages{
         stage('Checkout Repository'){
@@ -17,7 +17,7 @@ pipeline{
             steps{
                 script {
                     echo "Build Image ${DOCKERHUB_USER}/${APP}"
-                    DOCKER_IMAGE = docker.build("${DOCKERHUB_USER}/${APP}")
+                    dockerImage = docker.build("${DOCKERHUB_USER}/${APP}")
                 }
             }
         }
@@ -26,9 +26,10 @@ pipeline{
             steps{
                 script{
                     echo "Push to dockerhub with tags ${BUILD_NUMBER} and latest"
-                    docker.withRegistry('', 'dockerhub'){
-                        DOCKER_IMAGE.push(${BUILD_NUMBER})
-                        DOCKER_IMAGE.push('latest')
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+
                     }
                 }
             }
