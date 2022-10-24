@@ -26,7 +26,7 @@ pipeline{
             steps{
                 script{
                     echo "Push to dockerhub with tags ${BUILD_NUMBER} and latest"
-                    docker.withRegistry('https://hub.docker.com/', 'dockerhub'){
+                    docker.withRegistry('', 'dockerhub'){
                         DOCKER_IMAGE.push(${BUILD_NUMBER})
                         DOCKER_IMAGE.push('latest')
                     }
