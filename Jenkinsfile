@@ -1,5 +1,5 @@
 pipeline{
-    agent {docker "node:16.18-alpine"}
+    agent any
     environment {
         DOCKERHUB_USER = "xxavarlonxx"
         APP = "node_hello_world"
