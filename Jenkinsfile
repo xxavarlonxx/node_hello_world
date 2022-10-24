@@ -4,6 +4,7 @@ pipeline{
         DOCKERHUB_USER = "xxavarlonxx"
         APP = "node_hello_world"
         dockerImage = ""
+        registryCredential = "dockerhub"
     }
     stages{
         stage('Checkout Repository'){
